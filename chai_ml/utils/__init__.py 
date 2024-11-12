@@ -1,0 +1,26 @@
+# chai_ml/__init__.py
+from .generators.llama import LlamaTextGenerator
+from .generators.openai import OpenAITextGenerator
+from .generators.base import ModelFactory
+from .utils.templating import generate_json_template, count_tokens
+
+__version__ = "0.1.0"
+__all__ = [
+    "LlamaTextGenerator",
+    "OpenAITextGenerator",
+    "ModelFactory",
+    "generate_json_template",
+    "count_tokens",
+]
+
+# chai_ml/generators/__init__.py
+from .llama import LlamaTextGenerator
+from .openai import OpenAITextGenerator
+from .base import ModelFactory
+
+__all__ = ["LlamaTextGenerator", "OpenAITextGenerator", "ModelFactory"]
+
+# chai_ml/utils/__init__.py
+from .templating import generate_json_template, count_tokens
+
+__all__ = ["generate_json_template", "count_tokens"]
