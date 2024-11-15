@@ -11,6 +11,6 @@ __all__ = [
     "ModelFactory",
     "generate_json_template",
     "count_tokens",
-    "generate_text",              # Add these
-    "generate_structured_output"   # high-level functions
+    "generate_text", 
+    "generate_structured_output"
 ]

@@ -1,10 +1,15 @@
 # setup.py
 from setuptools import setup, find_packages
+from pathlib import Path
+
+# Read README safely
+this_directory = Path(__file__).parent
+long_description = (this_directory / "README.md").read_text(encoding='utf-8')
 
 setup(
     name="chai_ml",
     version="0.1.0",
-    packages=find_packages(),
+    packages=find_packages(include=['chai_ml', 'chai_ml.*']),
     install_requires=[
         "tiktoken",
         "pydantic>=2.0.0",
@@ -12,7 +17,7 @@ setup(
         "torch",
         "transformers>=4.0.0",
         "ipython",
-         "pandas",
+        "pandas",
         "numpy",
         "matplotlib",
     ],
@@ -28,9 +33,9 @@ setup(
     author="Ulysses Pascal",
     author_email="upascal@ucla.edu",
     description="A package for text generation using various LLM models",
-    long_description=open("README.md").read(),
+    long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/your-org/chai_ml",
+    url="https://github.com/AI-Cultural-Heritage-Lab/chai_ml",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",

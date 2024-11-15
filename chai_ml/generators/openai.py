@@ -7,6 +7,7 @@ from textwrap import dedent
 from ..utils.templating import generate_json_template, count_tokens
 from .base import BaseTextGenerator
 from typing import Set
+from dotenv import load_dotenv
 
 class OpenAITextGenerator(BaseTextGenerator):
     def __init__(
@@ -23,7 +24,10 @@ class OpenAITextGenerator(BaseTextGenerator):
         """
         self.model = model
         
-        # Try to get API key from different sources
+        load_dotenv()  # Loads from .env if exists
+        
+        # Priority order: passed key -> env var -> colab -> error
+        self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
             try:

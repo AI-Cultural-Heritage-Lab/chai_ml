@@ -7,6 +7,7 @@ import json
 import re
 from ..utils.templating import generate_json_template
 from .base import BaseTextGenerator
+from dotenv import load_dotenv
 
 class LlamaTextGenerator(BaseTextGenerator):
     def __init__(self, model_id: str = "meta-llama/Llama-3.2-1B-Instruct"):
@@ -16,6 +17,7 @@ class LlamaTextGenerator(BaseTextGenerator):
         Args:
             model_id (str): The Hugging Face model ID to load.
         """
+        load_dotenv()
         self.model_id = model_id
         self.tokenizer = AutoTokenizer.from_pretrained(
             self.model_id, 
