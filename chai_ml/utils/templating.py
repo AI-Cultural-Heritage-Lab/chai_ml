@@ -34,7 +34,6 @@ def generate_json_template(model: Type[BaseModel]) -> Dict[str, Any]:
         Dict[str, Any]: Template structure with placeholders and comments.
     """
     template = {}
-    
     for field_name, field_info in model.model_fields.items():
         field_type = field_info.annotation
         description = field_info.description
@@ -43,9 +42,16 @@ def generate_json_template(model: Type[BaseModel]) -> Dict[str, Any]:
         # Handle Optional types
         if get_origin(field_type) is Union and type(None) in get_args(field_type):
             actual_type = next(arg for arg in get_args(field_type) if arg is not type(None))
-            template[field_name] = _get_placeholder(actual_type, optional=True) + comment
+            if get_origin(actual_type) is list or actual_type is list:
+                template[field_name] = [f"<optional_list_item>{comment}"]
+            else:
+                template[field_name] = f"<optional_{_get_type_name(actual_type)}>{comment}"
+        # Handle lists
+        elif get_origin(field_type) is list or field_type is list:
+            template[field_name] = [f"<list_item>{comment}"]
+        # Handle basic types
         else:
-            template[field_name] = _get_placeholder(field_type) + comment
+            template[field_name] = f"<{_get_type_name(field_type)}>{comment}"
 
     return template
 

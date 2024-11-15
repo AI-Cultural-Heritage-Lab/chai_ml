@@ -67,11 +67,6 @@ class OpenAITextGenerator(BaseTextGenerator):
         Returns:
             str: Generated text.
         """
-        # max_tokens = self._max_tokens_adapter(
-        #     input_prompt, 
-        #     system_prompt, 
-        #     max_new_tokens
-        # )
 
         response = self.client.chat.completions.create(
             model=self.model,
