@@ -44,6 +44,17 @@ class LlamaTextGenerator(BaseTextGenerator):
             torch_dtype=torch.bfloat16,
             device_map="auto"
         )
+    
+    def get_supported_params(self) -> list:
+        """Return list of parameters supported by Llama models."""
+        return [
+            "max_new_tokens",
+            "temperature",
+            "top_p",
+            "repetition_penalty",
+            "top_k"
+            # Add other Llama-specific parameters
+        ]
 
     def generate_text(
         self, 

@@ -6,6 +6,7 @@ import os
 from textwrap import dedent
 from ..utils.templating import generate_json_template, count_tokens
 from .base import BaseTextGenerator
+from typing import Set
 
 class OpenAITextGenerator(BaseTextGenerator):
     def __init__(
@@ -39,36 +40,15 @@ class OpenAITextGenerator(BaseTextGenerator):
 
         self.client = OpenAI(api_key=self.api_key)
 
-    def _max_tokens_adapter(
-        self, 
-        input_prompt: str, 
-        system_prompt: str, 
-        max_new_tokens: int
-    ) -> int:
-        """
-        Convert max_new_tokens to max_tokens for OpenAI API.
-
-        Args:
-            input_prompt (str): User prompt.
-            system_prompt (str): System prompt.
-            max_new_tokens (int): Desired number of new tokens.
-
-        Returns:
-            int: Total maximum tokens for the API call.
-        """
-        input_tokens = count_tokens(input_prompt, self.model)
-        system_tokens = count_tokens(system_prompt, self.model)
-        return max_new_tokens + input_tokens + system_tokens
-
     def generate_text(
         self,
         input_prompt: str,
         system_prompt: str,
         max_new_tokens: int = 500,
-        temperature: float = 0.9,
-        top_p: float = 0.9,
-        frequency_penalty: float = 0.2,
-        presence_penalty: float = 0.0,
+        #temperature: float = 0.9,
+        #top_p: float = 0.9,
+        #frequency_penalty: float = 0.2,
+        #presence_penalty: float = 0.0,
         **kwargs
     ) -> str:
         """
@@ -87,11 +67,11 @@ class OpenAITextGenerator(BaseTextGenerator):
         Returns:
             str: Generated text.
         """
-        max_tokens = self._max_tokens_adapter(
-            input_prompt, 
-            system_prompt, 
-            max_new_tokens
-        )
+        # max_tokens = self._max_tokens_adapter(
+        #     input_prompt, 
+        #     system_prompt, 
+        #     max_new_tokens
+        # )
 
         response = self.client.chat.completions.create(
             model=self.model,
@@ -99,11 +79,11 @@ class OpenAITextGenerator(BaseTextGenerator):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": input_prompt}
             ],
-            max_tokens=max_tokens,
-            temperature=temperature,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty,
-            presence_penalty=presence_penalty,
+            max_tokens=max_new_tokens,
+            #temperature=temperature,
+            #top_p=top_p,
+            #frequency_penalty=frequency_penalty,
+            #presence_penalty=presence_penalty,
             **kwargs
         )
 
@@ -115,14 +95,13 @@ class OpenAITextGenerator(BaseTextGenerator):
         system_prompt: str,
         response_format: BaseModel,
         max_new_tokens: int = 500,
-        temperature: float = 0.9,
-        top_p: float = 0.9,
-        frequency_penalty: float = 0.2,
-        presence_penalty: float = 0.0,
+        #temperature: float = 0.9,
+        #top_p: float = 0.9,
+        #frequency_penalty: float = 0.2,
+        #presence_penalty: float = 0.0,
         **kwargs
     ) -> Dict:
         """Generate structured output using OpenAI's API."""
-        params = self._filter_supported_params(**kwargs)
         
         max_tokens = self._max_tokens_adapter(
             input_prompt,
@@ -137,12 +116,12 @@ class OpenAITextGenerator(BaseTextGenerator):
                 {"role": "user", "content": dedent(input_prompt)}
             ],
             response_format=response_format,
-            temperature=temperature,
-            max_tokens=max_tokens,
-            top_p=top_p,
-            frequency_penalty=frequency_penalty,
-            presence_penalty=presence_penalty,
-            **params
+            #temperature=temperature,
+            #max_tokens=max_tokens,
+            #top_p=top_p,
+            #frequency_penalty=frequency_penalty,
+            #presence_penalty=presence_penalty,
+            **kwargs
         )
 
         output = response.choices[0].message.parsed
