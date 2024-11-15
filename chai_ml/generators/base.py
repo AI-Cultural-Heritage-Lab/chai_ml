@@ -4,7 +4,12 @@ from typing import Any, Optional
 from pydantic import BaseModel
 import warnings
 
+from abc import ABC, abstractmethod
+from typing import Any, Dict, Set
+import warnings
+
 class BaseTextGenerator(ABC):
+
     @abstractmethod
     def generate_text(self, input_prompt: str, system_prompt: str, **kwargs) -> str:
         pass
