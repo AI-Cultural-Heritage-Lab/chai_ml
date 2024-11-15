@@ -121,65 +121,29 @@ class OpenAITextGenerator(BaseTextGenerator):
         presence_penalty: float = 0.0,
         **kwargs
     ) -> Dict:
-        """
-        Generate structured output using OpenAI's API.
-
-        Args:
-            input_prompt (str): User prompt.
-            system_prompt (str): System prompt.
-            response_format (BaseModel): Pydantic model for response structure.
-            max_new_tokens (int): Maximum new tokens to generate.
-            temperature (float): Sampling temperature.
-            top_p (float): Nucleus sampling parameter.
-            frequency_penalty (float): Token frequency penalty.
-            presence_penalty (float): Token presence penalty.
-            **kwargs: Additional arguments for the API call.
-
-        Returns:
-            Dict: Validated structured output.
-        """
-        template = generate_json_template(response_format)
+        """Generate structured output using OpenAI's API."""
+        params = self._filter_supported_params(**kwargs)
         
-        # Prepare the prompt with JSON structure
-        structured_prompt = f"""
-        Respond to the following prompt in the provided JSON format.
-
-        # Prompt:
-        {input_prompt}
-
-        # JSON Template:
-        {json.dumps(template, indent=2)}
-
-        Important: Return only valid JSON data matching the template structure.
-        Replace placeholder values with appropriate data.
-        """
-
         max_tokens = self._max_tokens_adapter(
-            structured_prompt,
+            input_prompt,
             system_prompt,
             max_new_tokens
         )
 
-        response = self.client.chat.completions.create(
+        response = self.client.beta.chat.completions.parse(
             model=self.model,
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": dedent(structured_prompt)}
+                {"role": "user", "content": dedent(input_prompt)}
             ],
-            max_tokens=max_tokens,
+            response_format=response_format,
             temperature=temperature,
+            max_tokens=max_tokens,
             top_p=top_p,
             frequency_penalty=frequency_penalty,
             presence_penalty=presence_penalty,
-            response_format={"type": "json_object"},
-            **kwargs
+            **params
         )
 
-        # Parse and validate the response
-        try:
-            output = response.choices[0].message.content
-            parsed_json = json.loads(output)
-            validated_data = response_format.model_validate(parsed_json)
-            return validated_data.model_dump(mode='json')
-        except (json.JSONDecodeError, ValidationError) as e:
-            raise ValueError(f"Error parsing/validating output: {str(e)}")
+        output = response.choices[0].message.parsed
+        return output.model_dump(mode='json')
