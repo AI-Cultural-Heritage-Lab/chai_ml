@@ -18,6 +18,14 @@ pip install -e ".[dev]"
 
 ## Quick Start
 
+To import the library in colab use `pip`: 
+
+```
+!pip install git+https://github.com/AI-Cultural-Heritage-Lab/chai_ml.git
+```
+
+To use the library you can call common functons using  `from chai_ml`:
+
 ```python
 from chai_ml import generate_text, generate_structured_output
 from pydantic import BaseModel
@@ -55,10 +63,25 @@ story_data = generate_structured_output(
 - JSON template generation
 - Easy model switching through factory pattern
 
+## Todo
+- add model parameter settings/checking
+- add gpu/model requirment checking 
+- add additional models 
+- add cost estimates
+- add prompt engineering test kit
+    - output evaluations
+    - time evaluations
+    - batch testing 
+
+
 ## Configuration
 
 ### OpenAI Setup
 
+If you are using google colab create a secret called `OPENAI_API_KEY`
+Then set your secret value to `your-open-ai-api-key`
+
+Alternatively,
 Set your OpenAI API key as an environment variable:
 ```bash
 export OPENAI_API_KEY="your-api-key-here"
@@ -72,31 +95,13 @@ os.environ["OPENAI_API_KEY"] = "your-api-key-here"
 
 ### Llama Setup
 
-Ensure you have the necessary permissions and model access for Llama models.
+1. For gated models ensure you have the necessary permissions and model access.
 
-## Development
+2. Create a HuggingFace token
 
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/AI-Cultural-Heritage-Lab/chai_ml.git
-   cd chai_ml
-   ```
+3. In colab set add `HF_TOKEN` as a secret.
 
-2. Install development dependencies:
-   ```bash
-   pip install -e ".[dev]"
-   ```
 
-3. Run tests:
-   ```bash
-   pytest
-   ```
-
-4. Run linting:
-   ```bash
-   flake8
-   black .
-   ```
 
 ## Contributing
 

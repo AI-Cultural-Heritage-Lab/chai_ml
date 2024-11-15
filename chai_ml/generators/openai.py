@@ -102,12 +102,6 @@ class OpenAITextGenerator(BaseTextGenerator):
         **kwargs
     ) -> Dict:
         """Generate structured output using OpenAI's API."""
-        
-        max_tokens = self._max_tokens_adapter(
-            input_prompt,
-            system_prompt,
-            max_new_tokens
-        )
 
         response = self.client.beta.chat.completions.parse(
             model=self.model,
@@ -117,7 +111,7 @@ class OpenAITextGenerator(BaseTextGenerator):
             ],
             response_format=response_format,
             #temperature=temperature,
-            #max_tokens=max_tokens,
+            max_tokens=max_new_tokens,
             #top_p=top_p,
             #frequency_penalty=frequency_penalty,
             #presence_penalty=presence_penalty,
