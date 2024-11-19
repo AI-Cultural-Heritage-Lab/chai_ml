@@ -18,6 +18,7 @@ setup(
         #"transformers>=4.0.0",
         "numpy",
         #accelerate,
+        "python-dotenv",
     ],
     extras_require={
         "dev": [

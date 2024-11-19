@@ -53,11 +53,11 @@ class ModelFactory:
 
         return cls._instances[model_name]
 
-def generate_text(input_prompt: str, system_prompt: str, model_name: str = "meta-llama/Llama-3.2-1B-Instruct", **kwargs) -> str:
+def generate_text(input_prompt: str, system_prompt: str, model_name: str , **kwargs) -> str:
     generator = ModelFactory.get_model(model_name)
     return generator.generate_text(input_prompt, system_prompt, **kwargs)
 
 def generate_structured_output(input_prompt: str, system_prompt: str, response_format: BaseModel, 
-                             model_name: str = "meta-llama/Llama-3.2-1B-Instruct", **kwargs) -> Any:
+                             model_name: str, **kwargs) -> Any:
     generator = ModelFactory.get_model(model_name)
     return generator.generate_structured_output(input_prompt, system_prompt, response_format=response_format, **kwargs)
