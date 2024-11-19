@@ -14,12 +14,10 @@ setup(
         "tiktoken",
         "pydantic>=2.0.0",
         "openai>=1.0.0",
-        "torch",
-        "transformers>=4.0.0",
-        "ipython",
-        "pandas",
+        #"torch",
+        #"transformers>=4.0.0",
         "numpy",
-        "matplotlib",
+        #accelerate,
     ],
     extras_require={
         "dev": [
